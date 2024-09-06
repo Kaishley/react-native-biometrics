@@ -136,6 +136,7 @@ __Result Object__
 | available | bool | A boolean indicating if biometrics is available or not |
 | biometryType | string | A string indicating what type of biometrics is available. `TouchID`, `FaceID`, `Biometrics`, or `undefined` if biometrics is not available. |
 | error | string | An error message indicating why biometrics may not be available. `undefined` if there is no error. |
+| errorCode | `IsSensorAvailableErrorCode` _(Android)_ <br> number _(iOS)_ | The native error code indicating why biometrics may not be available. |
 
 __Example__
 
@@ -263,6 +264,7 @@ __Result Object__
 | success | bool | A boolean indicating if the process was successful, `false` if the users cancels the biometrics prompt |
 | signature | string | A base64 encoded string representing the signature. `undefined` if the process was not successful. |
 | error | string | An error message indicating reasons why signature creation failed. `undefined` if there is no error. |
+| errorCode | `PromptErrorCode` _(Android)_ <br> number _(iOS)_ | The native error code indicating reasons why signature creation failed. |
 
 __Example__
 
@@ -308,6 +310,7 @@ __Result Object__
 | --- | --- | --- |
 | success | bool | A boolean indicating if the biometric prompt succeeded, `false` if the users cancels the biometrics prompt |
 | error | string | An error message indicating why the biometric prompt failed. `undefined` if there is no error. |
+| errorCode | `PromptErrorCode` _(Android)_ <br> number _(iOS)_ | The native error code indicating why the biometric prompt failed. |
 
 __Example__
 
