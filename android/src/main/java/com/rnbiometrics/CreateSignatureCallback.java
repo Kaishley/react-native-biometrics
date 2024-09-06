@@ -24,14 +24,15 @@ public class CreateSignatureCallback extends BiometricPrompt.AuthenticationCallb
     @Override
     public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
         super.onAuthenticationError(errorCode, errString);
-        if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON || errorCode == BiometricPrompt.ERROR_USER_CANCELED ) {
-            WritableMap resultMap = new WritableNativeMap();
-            resultMap.putBoolean("success", false);
+        WritableMap resultMap = new WritableNativeMap();
+        resultMap.putBoolean("success", false);
+        resultMap.putInt("errorCode", errorCode);
+        if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON || errorCode == BiometricPrompt.ERROR_USER_CANCELED) {
             resultMap.putString("error", "User cancellation");
-            this.promise.resolve(resultMap);
         } else {
-            this.promise.reject(errString.toString(), errString.toString());
+            resultMap.putString("error", errString.toString());
         }
+        this.promise.resolve(resultMap);
     }
 
     @Override
