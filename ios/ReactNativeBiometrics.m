@@ -37,7 +37,8 @@ RCT_EXPORT_METHOD(isSensorAvailable: (NSDictionary *)params resolver:(RCTPromise
     NSString *errorMessage = [NSString stringWithFormat:@"%@", la_error];
     NSDictionary *result = @{
       @"available": @(NO),
-      @"error": errorMessage
+      @"error": errorMessage,
+      @"errorCode": @(la_error.code)
     };
 
     resolve(result);
@@ -155,12 +156,18 @@ RCT_EXPORT_METHOD(createSignature: (NSDictionary *)params resolver:(RCTPromiseRe
       } else if (error.code == errSecUserCanceled) {
         NSDictionary *result = @{
           @"success": @(NO),
-          @"error": @"User cancellation"
+          @"error": @"User cancellation",
+          @"errorCode": @(error.code)
         };
         resolve(result);
       } else {
         NSString *message = [NSString stringWithFormat:@"Signature error: %@", error];
-        reject(@"signature_error", message, nil);
+        NSDictionary *result = @{
+          @"success": @(NO),
+          @"error": message,
+          @"errorCode": @(error.code)
+        };
+        resolve(result);
       }
     } else {
       NSString *message = [NSString stringWithFormat:@"Key not found: %@",[self keychainErrorToString:status]];
@@ -194,12 +201,18 @@ RCT_EXPORT_METHOD(simplePrompt: (NSDictionary *)params resolver:(RCTPromiseResol
       } else if (biometricError.code == LAErrorUserCancel) {
         NSDictionary *result = @{
           @"success": @(NO),
-          @"error": @"User cancellation"
+          @"error": @"User cancellation",
+          @"errorCode": @(biometricError.code)
         };
         resolve(result);
       } else {
         NSString *message = [NSString stringWithFormat:@"%@", biometricError];
-        reject(@"biometric_error", message, nil);
+        NSDictionary *result = @{
+          @"success": @(NO),
+          @"error": message,
+          @"errorCode": @(biometricError.code)
+        };
+        resolve(result);
       }
     }];
   });

@@ -48,7 +48,7 @@ interface IsSensorAvailableResult {
   available: boolean
   biometryType?: BiometryType
   error?: string
-  errorCode?: AndroidCanAuthenticateErrorCode
+  errorCode?: AndroidCanAuthenticateErrorCode | number
 }
 
 interface CreateKeysResult {
@@ -73,7 +73,7 @@ interface CreateSignatureResult {
   success: boolean
   signature?: string
   error?: string
-  errorCode?: AndroidPromptErrorCode
+  errorCode?: AndroidPromptErrorCode | number
 }
 
 interface SimplePromptOptions {
@@ -85,7 +85,7 @@ interface SimplePromptOptions {
 interface SimplePromptResult {
   success: boolean
   error?: string
-  errorCode?: AndroidPromptErrorCode
+  errorCode?: AndroidPromptErrorCode | number
 }
 
 /**
