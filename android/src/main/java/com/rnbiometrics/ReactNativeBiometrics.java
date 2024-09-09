@@ -64,6 +64,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
                 } else {
                     WritableMap resultMap = new WritableNativeMap();
                     resultMap.putBoolean("available", false);
+                    resultMap.putInt("errorCode", canAuthenticate);
 
                     switch (canAuthenticate) {
                         case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:

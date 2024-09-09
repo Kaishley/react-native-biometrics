@@ -7,6 +7,41 @@ const { ReactNativeBiometrics: bridge } = NativeModules
  */
 export type BiometryType = 'TouchID' | 'FaceID' | 'Biometrics'
 
+/**
+ * Only for Android
+ * https://developer.android.com/reference/androidx/biometric/BiometricManager#constants_1
+ */
+export enum IsSensorAvailableErrorCode {
+  BIOMETRIC_ERROR_HW_UNAVAILABLE = 1,
+  BIOMETRIC_ERROR_NONE_ENROLLED = 11,
+  BIOMETRIC_ERROR_NO_HARDWARE = 12,
+  BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED = 15,
+  BIOMETRIC_ERROR_UNSUPPORTED = -2,
+  BIOMETRIC_STATUS_UNKNOWN = -1
+}
+
+/**
+ * Only for Android
+ * https://developer.android.com/reference/androidx/biometric/BiometricPrompt#constants_1
+ */
+export enum PromptErrorCode {
+  ERROR_CANCELED = 5,
+  ERROR_HW_NOT_PRESENT = 12,
+  ERROR_HW_UNAVAILABLE = 1,
+  ERROR_LOCKOUT = 7,
+  ERROR_LOCKOUT_PERMANENT = 9,
+  ERROR_MORE_OPTIONS_BUTTON = 16,
+  ERROR_NEGATIVE_BUTTON = 13,
+  ERROR_NO_BIOMETRICS = 11,
+  ERROR_NO_DEVICE_CREDENTIAL = 14,
+  ERROR_NO_SPACE = 4,
+  ERROR_SECURITY_UPDATE_REQUIRED = 15,
+  ERROR_TIMEOUT = 3,
+  ERROR_UNABLE_TO_PROCESS = 2,
+  ERROR_USER_CANCELED = 10,
+  ERROR_VENDOR = 8
+}
+
 interface RNBiometricsOptions {
   allowDeviceCredentials?: boolean
 }
@@ -15,6 +50,7 @@ interface IsSensorAvailableResult {
   available: boolean
   biometryType?: BiometryType
   error?: string
+  errorCode?: IsSensorAvailableErrorCode | number
 }
 
 interface CreateKeysResult {
@@ -39,6 +75,7 @@ interface CreateSignatureResult {
   success: boolean
   signature?: string
   error?: string
+  errorCode?: PromptErrorCode | number
 }
 
 interface SimplePromptOptions {
@@ -50,6 +87,7 @@ interface SimplePromptOptions {
 interface SimplePromptResult {
   success: boolean
   error?: string
+  errorCode?: PromptErrorCode | number
 }
 
 /**
