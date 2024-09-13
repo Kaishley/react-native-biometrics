@@ -52,7 +52,7 @@ public class CreateSignatureCallback extends BiometricPrompt.AuthenticationCallb
             resultMap.putString("signature", signedString);
             promise.resolve(resultMap);
         } catch (Exception e) {
-            promise.reject("Error creating signature: " + e.getMessage(), "Error creating signature");
+            promise.reject(e.getClass().getSimpleName(), "Error creating signature");
         }
     }
 }

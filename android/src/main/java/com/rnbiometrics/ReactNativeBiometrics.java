@@ -90,7 +90,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
                 promise.resolve(resultMap);
             }
         } catch (Exception e) {
-            promise.reject("Error detecting biometrics availability: " + e.getMessage(), "Error detecting biometrics availability: " + e.getMessage());
+            promise.reject(e.getClass().getSimpleName(), "Error detecting biometrics availability: " + e.getMessage());
         }
     }
 
@@ -118,10 +118,10 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
                 resultMap.putString("publicKey", publicKeyString);
                 promise.resolve(resultMap);
             } else {
-                promise.reject("Cannot generate keys on android versions below 6.0", "Cannot generate keys on android versions below 6.0");
+                promise.reject("ANDROID_VERSION_NOT_SUPPORTED", "Cannot generate keys on android versions below 6.0");
             }
         } catch (Exception e) {
-            promise.reject("Error generating public private keys: " + e.getMessage(), "Error generating public private keys");
+            promise.reject(e.getClass().getSimpleName(), "Error generating public private keys");
         }
     }
 
@@ -139,7 +139,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
                 resultMap.putBoolean("keysDeleted", true);
                 promise.resolve(resultMap);
             } else {
-                promise.reject("Error deleting biometric key from keystore", "Error deleting biometric key from keystore");
+                promise.reject("DELETE_KEYS_FAILED", "Error deleting biometric key from keystore");
             }
         } else {
             WritableMap resultMap = new WritableNativeMap();
@@ -168,6 +168,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
                                 PrivateKey privateKey = (PrivateKey) keyStore.getKey(biometricKeyAlias, null);
                                 signature.initSign(privateKey);
 
+
                                 BiometricPrompt.CryptoObject cryptoObject = new BiometricPrompt.CryptoObject(signature);
 
                                 AuthenticationCallback authCallback = new CreateSignatureCallback(promise, payload);
@@ -177,12 +178,12 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
 
                                 biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials), cryptoObject);
                             } catch (Exception e) {
-                                promise.reject("Error signing payload: " + e.getMessage(), "Error generating signature: " + e.getMessage());
+                                promise.reject(e.getClass().getSimpleName(), "Error generating signature: " + e.getMessage());
                             }
                         }
                     });
         } else {
-            promise.reject("Cannot generate keys on android versions below 6.0", "Cannot generate keys on android versions below 6.0");
+            promise.reject("ANDROID_VERSION_NOT_SUPPORTED", "Cannot generate keys on android versions below 6.0");
         }
     }
 
@@ -228,12 +229,12 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
 
                                 biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials));
                             } catch (Exception e) {
-                                promise.reject("Error displaying local biometric prompt: " + e.getMessage(), "Error displaying local biometric prompt: " + e.getMessage());
+                                promise.reject(e.getClass().getSimpleName(), "Error displaying local biometric prompt: " + e.getMessage());
                             }
                         }
                     });
         } else {
-            promise.reject("Cannot display biometric prompt on android versions below 6.0", "Cannot display biometric prompt on android versions below 6.0");
+            promise.reject("ANDROID_VERSION_NOT_SUPPORTED", "Cannot display biometric prompt on android versions below 6.0");
         }
     }
 
@@ -245,7 +246,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
             resultMap.putBoolean("keysExist", doesBiometricKeyExist);
             promise.resolve(resultMap);
         } catch (Exception e) {
-            promise.reject("Error checking if biometric key exists: " + e.getMessage(), "Error checking if biometric key exists: " + e.getMessage());
+            promise.reject(e.getClass().getSimpleName(), "Error checking if biometric key exists: " + e.getMessage());
         }
     }
 
