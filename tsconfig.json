@@ -1,16 +1,29 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "react-native-biometrics": ["./src/index"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
-    "noImplicitAny": true,
-    "target": "es5",
-    "declaration": true,
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "outDir": "build",
-    "lib": ["es2015", "es2015.promise", "dom"]
-  },
-  "include": [
-    "index.ts",
-    "modules.d.ts"
-  ]
+    "target": "ESNext",
+    "verbatimModuleSyntax": true
+  }
 }
