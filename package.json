@@ -1,12 +1,12 @@
 {
   "name": "react-native-biometrics",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "summary": "A React Native library for biometrics",
   "description": "React Native biometric functionality for signing and encryption",
-  "source": "./src/index.tsx",
+  "source": "./src/index.ts",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
-  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "types": "./lib/typescript/module/src/index.d.ts",
   "exports": {
     ".": {
       "import": {
