@@ -221,4 +221,11 @@ export default class ReactNativeBiometrics {
       ...simplePromptOptions,
     });
   }
+
+  /**
+   * Dismisses the biometrics dialog created by createSignature or simplePrompt
+   */
+  cancelPrompt(): void {
+    return bridge.cancelPrompt();
+  }
 }
