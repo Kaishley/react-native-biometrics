@@ -3,6 +3,8 @@ import LocalAuthentication
 @objc(Biometrics)
 class Biometrics: NSObject {
 
+  var authenticationContext: LAContext?
+
 
   @objc
   func isSensorAvailable(_ params: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -140,7 +142,10 @@ class Biometrics: NSObject {
 //              return
 //          }
 
-          let context = LAContext()
+          // Store the `LAContext` object at a class level so that it can be accessed by `cancelPrompt`
+          self.authenticationContext = LAContext()
+          guard let context = self.authenticationContext else { return }
+          
           context.localizedFallbackTitle = ""
           
           context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: promptMessage) { success, laError in
@@ -207,7 +212,10 @@ class Biometrics: NSObject {
     let fallbackPromptMessage = params["fallbackPromptMessage"] as! String
 
     DispatchQueue.global(qos: .default).async {
-          let context = LAContext()
+          // Store the `LAContext` object at a class level so that it can be accessed by `cancelPrompt`
+          self.authenticationContext = LAContext()
+          guard let context = self.authenticationContext else { return }
+
           let laPolicy: LAPolicy = allowDeviceCredentials ? .deviceOwnerAuthentication : .deviceOwnerAuthenticationWithBiometrics
           context.localizedFallbackTitle = allowDeviceCredentials ? fallbackPromptMessage : ""
 
@@ -229,6 +237,14 @@ class Biometrics: NSObject {
               resolve(result)
           }
       }
+  }
+
+  @objc
+  func cancelPrompt() {
+    DispatchQueue.main.async {
+      authenticationContext?.invalidate()
+      authenticationContext = nil
+    }
   }
   
   @objc
