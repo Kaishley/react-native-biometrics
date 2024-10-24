@@ -12,6 +12,8 @@ RCT_EXTERN_METHOD(createSignature: (NSDictionary *) params resolver:(RCTPromiseR
 
 RCT_EXTERN_METHOD(simplePrompt: (NSDictionary *) params resolver:(RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject)
 
+RCT_EXTERN_METHOD(cancelPrompt)
+
 RCT_EXTERN_METHOD(biometricKeysExist: (RCTPromiseResolveBlock) resolve rejecter:(RCTPromiseRejectBlock) reject)
 
 + (BOOL)requiresMainQueueSetup
