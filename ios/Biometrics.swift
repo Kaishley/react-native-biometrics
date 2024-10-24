@@ -242,8 +242,8 @@ class Biometrics: NSObject {
   @objc
   func cancelPrompt() {
     DispatchQueue.main.async {
-      authenticationContext?.invalidate()
-      authenticationContext = nil
+      self.authenticationContext?.invalidate()
+      self.authenticationContext = nil
     }
   }
   
