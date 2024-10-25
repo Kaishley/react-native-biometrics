@@ -74,6 +74,7 @@ export const getBiometricSensorStatus: () => Promise<{
 export enum BiometricPromptError {
   PERMISSIONS_DENIED = 'PERMISSIONS_DENIED',
   TOO_MANY_ATTEMPTS = 'TOO_MANY_ATTEMPTS',
+  AUTHENTICATION_CANCELLED = 'AUTHENTICATION_CANCELLED',
   USER_CANCELLED = 'USER_CANCELLED',
   KEY_INVALIDATED = 'KEY_INVALIDATED',
   GENERIC = 'GENERIC',
@@ -82,6 +83,8 @@ export enum BiometricPromptError {
 const handlePromptErrors = (e: Error) => {
   if (Platform.OS === 'ios') {
     switch (e.code) {
+      case '-9':
+        return BiometricPromptError.AUTHENTICATION_CANCELLED;
       case '-8':
         return BiometricPromptError.TOO_MANY_ATTEMPTS;
       case '-6':
@@ -95,6 +98,7 @@ const handlePromptErrors = (e: Error) => {
   } else {
     switch (e.code) {
       case AndroidPromptErrorCode.ERROR_CANCELED.toString():
+        return BiometricPromptError.AUTHENTICATION_CANCELLED;
       case AndroidPromptErrorCode.ERROR_USER_CANCELED.toString():
       case AndroidPromptErrorCode.ERROR_NEGATIVE_BUTTON.toString():
         return BiometricPromptError.USER_CANCELLED;
@@ -194,4 +198,9 @@ export const checkIfBiometricKeysExist = async () => {
   } catch (e) {
     return false;
   }
+};
+
+export const cancelPrompt = () => {
+  const rnBiometrics = new ReactNativeBiometrics();
+  rnBiometrics.cancelPrompt();
 };

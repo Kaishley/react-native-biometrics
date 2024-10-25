@@ -3,6 +3,8 @@ import LocalAuthentication
 @objc(Biometrics)
 class Biometrics: NSObject {
 
+  var authenticationContext: LAContext?
+
 
   @objc
   func isSensorAvailable(_ params: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -141,9 +143,13 @@ class Biometrics: NSObject {
 //          }
 
           let context = LAContext()
+          // Store the `LAContext` object at a class level so that it can be accessed by `cancelPrompt`
+          self.authenticationContext = context
+          
           context.localizedFallbackTitle = ""
           
           context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: promptMessage) { success, laError in
+              self.authenticationContext = nil
               if !success {
                   let message = laError?.localizedDescription ?? "Unknown error"
                   let result: [String: Any] = [
@@ -208,10 +214,14 @@ class Biometrics: NSObject {
 
     DispatchQueue.global(qos: .default).async {
           let context = LAContext()
+          // Store the `LAContext` object at a class level so that it can be accessed by `cancelPrompt`
+          self.authenticationContext = context
+
           let laPolicy: LAPolicy = allowDeviceCredentials ? .deviceOwnerAuthentication : .deviceOwnerAuthenticationWithBiometrics
           context.localizedFallbackTitle = allowDeviceCredentials ? fallbackPromptMessage : ""
 
           context.evaluatePolicy(laPolicy, localizedReason: promptMessage) { success, error in
+              self.authenticationContext = nil
               if !success {
                   let message = error?.localizedDescription ?? "Unknown error"
                   let result: [String: Any] = [
@@ -229,6 +239,14 @@ class Biometrics: NSObject {
               resolve(result)
           }
       }
+  }
+
+  @objc
+  func cancelPrompt() {
+    DispatchQueue.global(qos: .default).async {
+      self.authenticationContext?.invalidate()
+      self.authenticationContext = nil
+    }
   }
   
   @objc

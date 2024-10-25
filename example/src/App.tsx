@@ -1,5 +1,6 @@
 import { StyleSheet, View, Button } from 'react-native';
 import {
+  cancelPrompt,
   checkIfBiometricKeysExist,
   createBiometricKeys,
   deleteBiometricKeys,
@@ -39,6 +40,13 @@ export default function App() {
     console.log(res);
   };
 
+  const handleCancelPrompt = () => {
+    handleSimplePrompt();
+    setTimeout(() => {
+      cancelPrompt();
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
       <Button onPress={handleIsSensorAvailable} title="isSensorAvailable()" />
@@ -47,6 +55,7 @@ export default function App() {
       <Button onPress={handleCreateKeys} title="createKeys()" />
       <Button onPress={handleDeleteKeys} title="deleteKeys()" />
       <Button onPress={handleBiometricKeysExist} title="biometricKeysExist()" />
+      <Button onPress={handleCancelPrompt} title="cancelPrompt()" />
     </View>
   );
 }

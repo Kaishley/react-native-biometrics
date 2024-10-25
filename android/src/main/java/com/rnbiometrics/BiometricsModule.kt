@@ -30,6 +30,8 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
 
   private val biometricKeyAlias = "biometric_key"
 
+  private var biometricPrompt: BiometricPrompt? = null
+
   @ReactMethod
   fun isSensorAvailable(params: ReadableMap, promise: Promise) {
     try {
@@ -86,7 +88,7 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
         var publicKeyString = Base64.encodeToString(encodedPublicKey, Base64.DEFAULT)
         publicKeyString = publicKeyString.replace("\r", "").replace("\n", "")
 
-        val resultMap = WritableNativeMap()
+        val resultMap = WritableNativeMap() 
         resultMap.putString("publicKey", publicKeyString)
         promise.resolve(resultMap)
       } else {
@@ -138,9 +140,12 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
           val authCallback = CreateSignatureCallback(promise, payload!!)
           val fragmentActivity = currentActivity as FragmentActivity?
           val executor = Executors.newSingleThreadExecutor()
-          val biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
+          
+          // Store the biometric prompt instance at a class level so that it can be accessed by `cancelPrompt`
+          biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
 
-          biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials), cryptoObject)
+
+          biometricPrompt?.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials), cryptoObject)
         } catch (e: Exception) {
           promise.reject(e::class.java.simpleName, "Error generating signature: ${e.message}")
         }
@@ -162,15 +167,33 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
           val authCallback = SimplePromptCallback(promise)
           val fragmentActivity = currentActivity as FragmentActivity?
           val executor = Executors.newSingleThreadExecutor()
-          val biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
 
-          biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials))
+          // Store the biometric prompt instance at a class level so that it can be accessed by `cancelPrompt`
+          biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
+
+          biometricPrompt?.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials))
         } catch (e: Exception) {
           promise.reject(e::class.java.simpleName, "Error displaying local biometric prompt: ${e.message}")
         }
       }
     } else {
       promise.reject("ANDROID_VERSION_NOT_SUPPORTED", "Cannot display biometric prompt on android versions below 6.0")
+    }
+  }
+
+  @ReactMethod
+  fun cancelPrompt(promise: Promise) {
+    if (isCurrentSDKMarshmallowOrLater()) {
+      UiThreadUtil.runOnUiThread {
+        try {
+          biometricPrompt?.cancelAuthentication()
+          promise.resolve("Biometric authentication cancelled")
+        } catch (e: Exception) {
+          promise.reject(e::class.java.simpleName, "Error cancelling biometric authentication: ${e.message}")
+        }
+      }
+    } else {
+      promise.reject("ANDROID_VERSION_NOT_SUPPORTED", "Android versions below 6.0 do not support biometrics")
     }
   }
 
