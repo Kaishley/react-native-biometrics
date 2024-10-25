@@ -145,7 +145,7 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
           biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
 
 
-          biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials), cryptoObject)
+          biometricPrompt?.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials), cryptoObject)
         } catch (e: Exception) {
           promise.reject(e::class.java.simpleName, "Error generating signature: ${e.message}")
         }
@@ -171,7 +171,7 @@ class BiometricsModule(reactContext: ReactApplicationContext) :
           // Store the biometric prompt instance at a class level so that it can be accessed by `cancelPrompt`
           biometricPrompt = BiometricPrompt(fragmentActivity!!, executor, authCallback)
 
-          biometricPrompt.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials))
+          biometricPrompt?.authenticate(getPromptInfo(promptMessage, cancelButtonText, allowDeviceCredentials))
         } catch (e: Exception) {
           promise.reject(e::class.java.simpleName, "Error displaying local biometric prompt: ${e.message}")
         }
